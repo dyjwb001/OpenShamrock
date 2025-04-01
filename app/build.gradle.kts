@@ -130,12 +130,7 @@ android {
 }
 
 fun configureAppSigningConfigsForRelease(project: Project) {
-    val keystorePath: String? = System.getenv("KEYSTORE_PATH")
-    if (keystorePath.isNullOrBlank()) {
-        // 如果未设置环境变量，输出提示，方便调试
-        println("KEYSTORE_PATH 未设置，release APK 不会签名")
-        return
-    }
+    val keystorePath = System.getenv("KEYSTORE_PATH") ?: "${System.getProperty("user.home")}/.android/debug.keystore"
     project.configure<ApplicationExtension> {
         signingConfigs {
             create("release") {
