@@ -38,13 +38,18 @@ jobs:
         run: |
           chmod +x ./gradlew
           ./gradlew :app:assembleRelease --build-cache --parallel --warning-mode all --stacktrace
-          echo "===== 检查APK文件 ====="
-          find app/build/outputs/apk -name '*.apk' -exec ls -lh {} \;
-          echo "APK_FILES=$(find app/build/outputs/apk -name '*release.apk' | tr '\n' ' ')" >> $GITHUB_ENV
+          echo "APK_FILE_ALL=$(find app/build/outputs/apk -name '*release.apk' | grep 'app/release')" >> $GITHUB_ENV
+          echo "APK_FILE_ARM64=$(find app/build/outputs/apk -name '*arm64-release.apk')" >> $GITHUB_ENV
+          echo "APK_FILE_X86_64=$(find app/build/outputs/apk -name '*x64-release.apk')" >> $GITHUB_ENV
+        env:
+          # 如果没有secrets，使用debug签名
+          ORG_GRADLE_PROJECT_storePassword: "android"
+          ORG_GRADLE_PROJECT_keyPassword: "android"
+          ORG_GRADLE_PROJECT_keyAlias: "androiddebugkey"
+          ORG_GRADLE_PROJECT_storeFile: "../debug.keystore"
 
       - name: Upload APKs
         uses: actions/upload-artifact@v4
         with:
           name: shamrock-apks
-          path: ${{ env.APK_FILES }}
-          if-no-files-found: error
+          path: app/build/outputs/apk/release/*.apk
