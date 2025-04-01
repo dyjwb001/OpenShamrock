@@ -48,15 +48,13 @@ jobs:
 
       - name: Build with Gradle
         env:
-          KEYSTORE_PATH: $HOME/.android/debug.keystore
+          KEYSTORE_PATH: /home/runner/.android/debug.keystore  # 直接写死绝对路径
           KEYSTORE_PASSWORD: android
           KEY_ALIAS: androiddebugkey
           KEY_PASSWORD: android
         run: |
           chmod +x ./gradlew
           ./gradlew :app:assembleRelease --build-cache --parallel --warning-mode all --stacktrace
-          # 列出生成的 APK 供检查
-          find app/build/outputs/apk -type f
 
       - name: Upload APKs
         uses: actions/upload-artifact@v4
