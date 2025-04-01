@@ -48,6 +48,9 @@ jobs:
           ORG_GRADLE_PROJECT_keyAlias: "androiddebugkey"
           ORG_GRADLE_PROJECT_storeFile: "../debug.keystore"
 
+      - name: List APK files
+        run: find app/build/outputs/apk -type f
+
       - name: Upload APKs
         uses: actions/upload-artifact@v4
         with:
