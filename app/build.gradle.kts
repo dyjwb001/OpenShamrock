@@ -132,23 +132,30 @@ android {
 fun configureAppSigningConfigsForRelease(project: Project) {
     val keystorePath: String? = System.getenv("KEYSTORE_PATH")
     if (keystorePath.isNullOrBlank()) {
+        // 如果未设置环境变量，输出提示，方便调试
+        println("KEYSTORE_PATH 未设置，release APK 不会签名")
         return
     }
     project.configure<ApplicationExtension> {
         signingConfigs {
             create("release") {
-                storeFile = file(System.getenv("KEYSTORE_PATH"))
+                storeFile = file(keystorePath)
                 storePassword = System.getenv("KEYSTORE_PASSWORD")
                 keyAlias = System.getenv("KEY_ALIAS")
                 keyPassword = System.getenv("KEY_PASSWORD")
+                // 同时启用 V1 与 V2 签名
+                enableV1Signing = true
                 enableV2Signing = true
             }
         }
         buildTypes {
             release {
                 signingConfig = signingConfigs.findByName("release")
+                // 如果需要，可以开启混淆等其它 release 配置
+                isMinifyEnabled = false
             }
             debug {
+                // 如果 debug 也希望使用 release 签名，可保持配置；如果不需要，可移除此行
                 signingConfig = signingConfigs.findByName("release")
             }
         }
