@@ -14,11 +14,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:
-      KEYSTORE_PATH: ${{ runner.home }}/.android/debug.keystore
-      KEYSTORE_PASSWORD: android
-      KEY_ALIAS: androiddebugkey
-      KEY_PASSWORD: android
+
     steps:
       - uses: actions/checkout@v4
 
@@ -51,6 +47,11 @@ jobs:
           restore-keys: gradle-
 
       - name: Build with Gradle
+        env:
+          KEYSTORE_PATH: $HOME/.android/debug.keystore
+          KEYSTORE_PASSWORD: android
+          KEY_ALIAS: androiddebugkey
+          KEY_PASSWORD: android
         run: |
           chmod +x ./gradlew
           ./gradlew :app:assembleRelease --build-cache --parallel --warning-mode all --stacktrace
