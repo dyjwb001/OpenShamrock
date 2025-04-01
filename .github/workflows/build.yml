@@ -15,7 +15,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      KEYSTORE_PATH: ${{ env.HOME }}/.android/debug.keystore
+      KEYSTORE_PATH: ${{ runner.home }}/.android/debug.keystore
       KEYSTORE_PASSWORD: android
       KEY_ALIAS: androiddebugkey
       KEY_PASSWORD: android
